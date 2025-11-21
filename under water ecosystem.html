@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Underwater Ecosystems</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(180deg, #0a1828 0%, #1e3a5f 30%, #2a5c8a 60%, #3d7ea6 100%);
+            color: #e8f4f8;
+            line-height: 1.7;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 50px 20px;
+            background: rgba(10, 24, 40, 0.7);
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0, 200, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 200, 255, 0.1) 0%, transparent 70%);
+            animation: pulse 8s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        
+        h1 {
+            font-size: 3.5em;
+            margin-bottom: 15px;
+            color: #00d4ff;
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.6);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .subtitle {
+            font-size: 1.3em;
+            color: #5ddbff;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section {
+            background: rgba(15, 35, 55, 0.6);
+            padding: 35px;
+            margin-bottom: 35px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s ease;
+        }
+        
+        .section:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 50px rgba(0, 212, 255, 0.25);
+            border-color: rgba(0, 212, 255, 0.5);
+        }
+        
+        h2 {
+            color: #00d4ff;
+            margin-bottom: 20px;
+            font-size: 2.2em;
+            border-bottom: 3px solid rgba(0, 212, 255, 0.4);
+            padding-bottom: 12px;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+        }
+        
+        h3 {
+            color: #5ddbff;
+            margin-top: 25px;
+            margin-bottom: 12px;
+            font-size: 1.5em;
+        }
+        
+        h4 {
+            color: #7ee8ff;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            color: #d1ebf5;
+        }
+        
+        ul {
+            margin-left: 25px;
+            margin-top: 12px;
+        }
+        
+        li {
+            margin-bottom: 12px;
+            padding-left: 10px;
+            color: #d1ebf5;
+        }
+        
+        .zone-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+        
+        .zone-card {
+            background: linear-gradient(135deg, rgba(0, 100, 150, 0.4) 0%, rgba(0, 50, 100, 0.5) 100%);
+            padding: 25px;
+            border-radius: 12px;
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .zone-card:hover {
+            transform: scale(1.05);
+            border-color: rgba(0, 212, 255, 0.6);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+        }
+        
+        .highlight {
+            background: rgba(0, 212, 255, 0.15);
+            padding: 20px;
+            border-left: 5px solid #00d4ff;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        .ecosystem-type {
+            background: rgba(20, 60, 90, 0.5);
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border-left: 4px solid #00d4ff;
+        }
+        
+        .bubble {
+            position: fixed;
+            bottom: -30px;
+            background: radial-gradient(circle at 30% 30%, rgba(200, 240, 255, 0.4), rgba(100, 200, 255, 0.2));
+            border-radius: 50%;
+            animation: float 10s infinite ease-in-out;
+            pointer-events: none;
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.3);
+            z-index: -1;
+        }
+        
+        @keyframes float {
+            0% { 
+                transform: translateY(0) translateX(0) scale(1);
+                opacity: 0.7;
+            }
+            50% { 
+                transform: translateY(-50vh) translateX(30px) scale(1.2);
+                opacity: 0.9;
+            }
+            100% { 
+                transform: translateY(-100vh) translateX(0) scale(0.8);
+                opacity: 0;
+            }
+        }
+        
+        strong {
+            color: #5ddbff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐠 Underwater Ecosystems</h1>
+            <p class="subtitle">Discovering the Intricate Web of Ocean Life</p>
+        </header>
+        
+        <div class="section">
+            <h2>What Is an Underwater Ecosystem?</h2>
+            <p>An underwater ecosystem is a dynamic community of living organisms (plants, animals, microorganisms) interacting with each other and their aquatic environment. These ecosystems range from shallow coastal zones to the deepest ocean trenches, each supporting unique life forms adapted to specific conditions.</p>
+            
+            <div class="highlight">
+                <strong>💡 Key Concept:</strong> Ocean ecosystems produce over 50% of Earth's oxygen and regulate global climate while supporting millions of species. They cover 71% of our planet's surface.
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Ocean Zones & Their Ecosystems</h2>
+            
+            <div class="zone-grid">
+                <div class="zone-card">
+                    <h4>☀️ Sunlight Zone (0-200m)</h4>
+                    <p><strong>Light:</strong> Abundant sunlight</p>
+                    <p><strong>Life:</strong> Most marine life lives here - fish, sea turtles, dolphins, jellyfish, phytoplankton</p>
+                    <p><strong>Features:</strong> Photosynthesis occurs, warmest waters</p>
+                </div>
+                
+                <div class="zone-card">
+                    <h4>🌅 Twilight Zone (200-1000m)</h4>
+                    <p><strong>Light:</strong> Dim, fading light</p>
+                    <p><strong>Life:</strong> Bioluminescent creatures, squid, octopuses, some sharks</p>
+                    <p><strong>Features:</strong> Temperature drops rapidly, no photosynthesis</p>
+                </div>
+                
+                <div class="zone-card">
+                    <h4>🌑 Midnight Zone (1000-4000m)</h4>
+                    <p><strong>Light:</strong> Completely dark</p>
+                    <p><strong>Life:</strong> Anglerfish, gulper eels, vampire squid</p>
+                    <p><strong>Features:</strong> High pressure, near freezing, sparse life</p>
+                </div>
+                
+                <div class="zone-card">
+                    <h4>⬇️ Abyssal Zone (4000-6000m)</h4>
+                    <p><strong>Light:</strong> Pitch black</p>
+                    <p><strong>Life:</strong> Sea cucumbers, tube worms, extremophile bacteria</p>
+                    <p><strong>Features:</strong> Extreme pressure, cold, depends on marine snow</p>
+                </div>
+                
+                <div class="zone-card">
+                    <h4>🕳️ Hadal Zone (6000-11000m)</h4>
+                    <p><strong>Light:</strong> Absolute darkness</p>
+                    <p><strong>Life:</strong> Snailfish, amphipods, specialized bacteria</p>
+                    <p><strong>Features:</strong> Deepest trenches, crushing pressure, limited life</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Major Underwater Ecosystem Types</h2>
+            
+            <div class="ecosystem-type">
+                <h3>🪸 Coral Reef Ecosystems</h3>
+                <p><strong>Location:</strong> Tropical and subtropical shallow waters</p>
+                <p><strong>Characteristics:</strong> Built by coral polyps over thousands of years, incredibly biodiverse</p>
+                <ul>
+                    <li><strong>Key Species:</strong> Coral polyps, reef fish (clownfish, parrotfish), sea anemones, sea urchins, sharks</li>
+                    <li><strong>Importance:</strong> Support 25% of marine species despite covering less than 1% of ocean floor</li>
+                    <li><strong>Threats:</strong> Ocean acidification, warming waters, pollution, overfishing</li>
+                    <li><strong>Examples:</strong> Great Barrier Reef, Caribbean reefs, Red Sea coral</li>
+                </ul>
+            </div>
+            
+            <div class="ecosystem-type">
+                <h3>🌿 Kelp Forest Ecosystems</h3>
+                <p><strong>Location:</strong> Cold, nutrient-rich coastal waters</p>
+                <p><strong>Characteristics:</strong> Giant kelp can grow 60cm per day, creating underwater forests</p>
+                <ul>
+                    <li><strong>Key Species:</strong> Giant kelp, sea otters, sea urchins, harbor seals, rockfish</li>
+                    <li><strong>Importance:</strong> Provide shelter and food, absorb carbon dioxide</li>
+                    <li><strong>Threats:</strong> Sea urchin population explosions, warming oceans, pollution</li>
+                    <li><strong>Examples:</strong> California coast, Alaska, South Africa, Australia</li>
+                </ul>
+            </div>
+            
+            <div class="ecosystem-type">
+                <h3>🌾 Seagrass Meadows</h3>
+                <p><strong>Location:</strong> Shallow coastal waters worldwide</p>
+                <p><strong>Characteristics:</strong> Flowering plants adapted to saltwater, extensive root systems</p>
+                <ul>
+                    <li><strong>Key Species:</strong> Seagrass, manatees, sea turtles, seahorses, juvenile fish</li>
+                    <li><strong>Importance:</strong> Nurseries for fish, carbon sequestration, stabilize seafloor</li>
+                    <li><strong>Threats:</strong> Coastal development, water pollution, anchor damage</li>
+                    <li><strong>Examples:</strong> Florida Bay, Mediterranean, Southeast Asia</li>
+                </ul>
+            </div>
+            
+            <div class="ecosystem-type">
+                <h3>🌳 Mangrove Ecosystems</h3>
+                <p><strong>Location:</strong> Tropical and subtropical coastlines</p>
+                <p><strong>Characteristics:</strong> Trees adapted to saltwater, complex root systems</p>
+                <ul>
+                    <li><strong>Key Species:</strong> Mangrove trees, crabs, shrimp, juvenile fish, herons</li>
+                    <li><strong>Importance:</strong> Protect coastlines from erosion, filter pollutants, nurseries</li>
+                    <li><strong>Threats:</strong> Coastal development, aquaculture, rising sea levels</li>
+                    <li><strong>Examples:</strong> Sundarbans (India/Bangladesh), Everglades, Southeast Asia</li>
+                </ul>
+            </div>
+            
+            <div class="ecosystem-type">
+                <h3>🔥 Hydrothermal Vent Ecosystems</h3>
+                <p><strong>Location:</strong> Deep ocean floor along tectonic plate boundaries</p>
+                <p><strong>Characteristics:</strong> Superheated water rich in minerals, chemosynthesis-based</p>
+                <ul>
+                    <li><strong>Key Species:</strong> Giant tube worms, vent crabs, extremophile bacteria, vent fish</li>
+                    <li><strong>Importance:</strong> Show life can exist without sunlight, clues about life's origins</li>
+                    <li><strong>Discovery:</strong> First found in 1977, revolutionized understanding of life</li>
+                    <li><strong>Examples:</strong> East Pacific Rise, Mid-Atlantic Ridge, Mariana Trench</li>
+                </ul>
+            </div>
+            
+            <div class="ecosystem-type">
+                <h3>🏖️ Open Ocean (Pelagic) Ecosystems</h3>
+                <p><strong>Location:</strong> Open water away from coasts and seafloor</p>
+                <p><strong>Characteristics:</strong> Largest ecosystem, divided into multiple zones by depth</p>
+                <ul>
+                    <li><strong>Key Species:</strong> Phytoplankton, zooplankton, tuna, sharks, whales, dolphins</li>
+                    <li><strong>Importance:</strong> Largest carbon sink, base of marine food web</li>
+                    <li><strong>Threats:</strong> Overfishing, plastic pollution, climate change</li>
+                    <li><strong>Features:</strong> Continuous movement, migration highways for large species</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Food Web Components</h2>
+            
+            <h3>🌱 Producers</h3>
+            <p><strong>Phytoplankton:</strong> Microscopic algae that photosynthesize, produce most ocean oxygen</p>
+            <p><strong>Seaweed & Kelp:</strong> Large algae providing food and shelter</p>
+            <p><strong>Seagrasses:</strong> Flowering plants in shallow waters</p>
+            <p><strong>Chemosynthetic Bacteria:</strong> Convert chemicals to energy at deep-sea vents</p>
+            
+            <h3>🦐 Consumers</h3>
+            <p><strong>Primary:</strong> Zooplankton, krill, herbivorous fish feeding on producers</p>
+            <p><strong>Secondary:</strong> Small carnivorous fish, squid eating primary consumers</p>
+            <p><strong>Tertiary:</strong> Large predators like sharks, orcas, tuna at top of food chain</p>
+            
+            <h3>♻️ Decomposers</h3>
+            <p><strong>Bacteria & Fungi:</strong> Break down dead organic matter</p>
+            <p><strong>Detritivores:</strong> Sea cucumbers, hagfish, crabs consuming organic debris</p>
+            <p><strong>Marine Snow:</strong> Falling organic particles feeding deep-sea life</p>
+        </div>
+        
+        <div class="section">
+            <h2>Ecosystem Services</h2>
+            <ul>
+                <li><strong>Oxygen Production:</strong> 50-80% of Earth's oxygen from marine phytoplankton</li>
+                <li><strong>Climate Regulation:</strong> Absorb 25% of human CO2 emissions</li>
+                <li><strong>Food Supply:</strong> 3+ billion people rely on seafood as primary protein</li>
+                <li><strong>Coastal Protection:</strong> Reefs and mangroves buffer storm damage</li>
+                <li><strong>Economic Value:</strong> Tourism, fishing, pharmaceuticals worth trillions</li>
+                <li><strong>Biodiversity:</strong> Home to 80% of all life on Earth</li>
+                <li><strong>Nutrient Cycling:</strong> Essential for global nutrient distribution</li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>Threats to Underwater Ecosystems</h2>
+            
+            <div class="highlight">
+                <h3>⚠️ Major Challenges</h3>
+                <ul>
+                    <li><strong>Climate Change:</strong> Ocean warming, acidification, sea level rise</li>
+                    <li><strong>Pollution:</strong> Plastics, chemicals, oil spills, agricultural runoff</li>
+                    <li><strong>Overfishing:</strong> Depleted fish stocks, bycatch, habitat destruction</li>
+                    <li><strong>Habitat Loss:</strong> Coastal development, bottom trawling, dredging</li>
+                    <li><strong>Invasive Species:</strong> Disrupting native ecosystems</li>
+                    <li><strong>Dead Zones:</strong> Oxygen-depleted areas from nutrient pollution</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Conservation Efforts</h2>
+            <ul>
+                <li><strong>Marine Protected Areas:</strong> Safeguarding critical habitats from exploitation</li>
+                <li><strong>Sustainable Fishing:</strong> Quotas, gear restrictions, seasonal closures</li>
+                <li><strong>Coral Restoration:</strong> Growing and transplanting coral fragments</li>
+                <li><strong>Pollution Reduction:</strong> Plastic bans, wastewater treatment, cleanups</li>
+                <li><strong>Research & Monitoring:</strong> Understanding ecosystem health and changes</li>
+                <li><strong>Education:</strong> Raising awareness about ocean importance</li>
+                <li><strong>International Cooperation:</strong> Global agreements on ocean protection</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        // Create floating bubbles in background
+        function createBubble() {
+            const bubble = document.createElement('div');
+            bubble.classList.add('bubble');
+            const size = Math.random() * 50 + 15;
+            bubble.style.width = size + 'px';
+            bubble.style.height = size + 'px';
+            bubble.style.left = Math.random() * 100 + '%';
+            bubble.style.animationDuration = (Math.random() * 5 + 6) + 's';
+            bubble.style.animationDelay = Math.random() * 3 + 's';
+            document.body.appendChild(bubble);
+            setTimeout(() => bubble.remove(), 12000);
+        }
+        
+        setInterval(createBubble, 1200);
+    </script>
+</body>
+</html>

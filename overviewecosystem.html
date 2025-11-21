@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Save Our Oceans</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(180deg, #001a33 0%, #003d5c 50%, #005a7f 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Animated wave background */
+        .wave {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="%23ffffff"/><path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" fill="%23ffffff"/><path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="%23ffffff"/></svg>') repeat-x;
+            background-size: 1200px 100px;
+            animation: wave 15s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
+            opacity: 0.3;
+            z-index: 1;
+        }
+
+        .wave:nth-child(2) {
+            bottom: 10px;
+            animation: wave 20s cubic-bezier(0.36, 0.45, 0.63, 0.53) -.125s infinite, swell 7s ease -1.25s infinite;
+            opacity: 0.2;
+        }
+
+        @keyframes wave {
+            0% { background-position-x: 0; }
+            100% { background-position-x: 1200px; }
+        }
+
+        @keyframes swell {
+            0%, 100% { transform: translate3d(0,-25px,0); }
+            50% { transform: translate3d(0,5px,0); }
+        }
+
+        /* Floating bubbles */
+        .bubble {
+            position: fixed;
+            bottom: -100px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: rise 15s infinite ease-in;
+            z-index: 0;
+        }
+
+        @keyframes rise {
+            to { bottom: 110%; transform: translateX(50px); }
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 26, 51, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #8dd5f7;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #8dd5f7;
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            padding: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(141, 213, 247, 0.7);
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(141, 213, 247, 0.5); }
+            to { text-shadow: 0 0 40px rgba(141, 213, 247, 1); }
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            color: #8dd5f7;
+            max-width: 600px;
+        }
+
+        section {
+            min-height: 100vh;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(0, 58, 92, 0.4);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 4rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(141, 213, 247, 0.2);
+        }
+
+        h2 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #8dd5f7;
+            text-shadow: 0 0 20px rgba(141, 213, 247, 0.5);
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .card {
+            background: rgba(0, 90, 127, 0.3);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(141, 213, 247, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(141, 213, 247, 0.3);
+            border-color: #8dd5f7;
+        }
+
+        .card h3 {
+            font-size: 1.8rem;
+            color: #8dd5f7;
+            margin-bottom: 1rem;
+        }
+
+        .card p {
+            line-height: 1.8;
+            color: #b3e5fc;
+        }
+
+        .intro-text {
+            font-size: 1.2rem;
+            line-height: 2;
+            text-align: center;
+            color: #b3e5fc;
+            margin-bottom: 2rem;
+        }
+
+        .cta {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem;
+            background: rgba(141, 213, 247, 0.1);
+            border-radius: 15px;
+        }
+
+        .cta h3 {
+            font-size: 2rem;
+            color: #8dd5f7;
+            margin-bottom: 1rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 26, 51, 0.9);
+            position: relative;
+            z-index: 10;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            .container { padding: 2rem; }
+            nav ul { gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated waves -->
+    <div class="wave"></div>
+    <div class="wave"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <ul>
+           
+            <li><a href="#pollution">Pollution & Plastic</a></li>
+            <li><a href="#climate">Climate Change</a></li>
+            <li><a href="#overfishing">Overfishing</a></li>
+            <li><a href="#habitat">Habitat Destruction</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <h1>Save Our Oceans</h1>
+        <p>Our oceans are facing unprecedented threats. Learn about the challenges and how we can make a difference.</p>
+    </section>
+
+    <!-- Pollution Section -->
+    <section id="pollution">
+        <div class="container">
+            <h2>🌊 Pollution & Plastic</h2>
+            <p class="intro-text">Every year, millions of tons of plastic waste enter our oceans, threatening marine life and ecosystems worldwide.</p>
+            <div class="content">
+                <div class="card">
+                    <h3>Plastic Crisis</h3>
+                    <p>Over 8 million tons of plastic enter the ocean annually. This pollution forms massive garbage patches and breaks down into microplastics that infiltrate every level of the marine food chain.</p>
+                </div>
+                <div class="card">
+                    <h3>Marine Life Impact</h3>
+                    <p>Sea turtles, whales, and seabirds mistake plastic for food. Entanglement in fishing gear and plastic debris kills hundreds of thousands of marine animals each year.</p>
+                </div>
+                <div class="card">
+                    <h3>Chemical Pollution</h3>
+                    <p>Industrial waste, oil spills, and agricultural runoff introduce toxic chemicals into ocean waters, poisoning marine ecosystems and contaminating seafood.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Climate Change Section -->
+    <section id="climate">
+        <div class="container">
+            <h2>🌍Climate Change</h2>
+            <p class="intro-text">Rising temperatures and ocean acidification are fundamentally altering marine ecosystems.</p>
+            <div class="content">
+                <div class="card">
+                    <h3>Ocean Warming</h3>
+                    <p>Oceans absorb 90% of excess heat from global warming. Rising temperatures cause coral bleaching, disrupt migration patterns, and force species to relocate to cooler waters.</p>
+                </div>
+                <div class="card">
+                    <h3>Acidification</h3>
+                    <p>Increased CO2 absorption makes oceans more acidic, threatening shellfish, coral reefs, and organisms with calcium-based shells and skeletons.</p>
+                </div>
+                <div class="card">
+                    <h3>Sea Level Rise</h3>
+                    <p>Melting ice caps and thermal expansion raise sea levels, flooding coastal habitats and threatening human communities living near the shore.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Overfishing Section -->
+    <section id="overfishing">
+        <div class="container">
+            <h2>🐟 Overfishing</h2>
+            <p class="intro-text">Unsustainable fishing practices are depleting fish populations faster than they can recover.</p>
+            <div class="content">
+                <div class="card">
+                    <h3>Depleted Stocks</h3>
+                    <p>Over 30% of global fish stocks are overfished, with many commercially important species on the brink of collapse. Industrial fishing operations harvest fish faster than populations can reproduce.</p>
+                </div>
+                <div class="card">
+                    <h3>Bycatch Problem</h3>
+                    <p>Unintended catch of dolphins, turtles, and non-target fish species results in massive waste. For every pound of target fish, up to five pounds of other species are caught and discarded.</p>
+                </div>
+                <div class="card">
+                    <h3>Ecosystem Imbalance</h3>
+                    <p>Removing key species disrupts the ocean food web, causing cascading effects throughout marine ecosystems and threatening biodiversity.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Habitat Destruction Section -->
+    <section id="habitat">
+        <div class="container">
+            <h2>🌳 Habitat Destruction</h2>
+            <p class="intro-text">Critical marine habitats are being destroyed at alarming rates, eliminating nurseries and homes for countless species.</p>
+            <div class="content">
+                <div class="card">
+                    <h3>Coral Reef Loss</h3>
+                    <p>50% of coral reefs have been lost in the past 30 years due to warming waters, pollution, and destructive fishing. Reefs support 25% of all marine life despite covering less than 1% of the ocean.</p>
+                </div>
+                <div class="card">
+                    <h3>Mangrove Destruction</h3>
+                    <p>Coastal development destroys mangrove forests that serve as vital nurseries for fish and protect coastlines from storms. Over 35% of mangroves have been cleared globally.</p>
+                </div>
+                <div class="card">
+                    <h3>Seabed Damage</h3>
+                    <p>Bottom trawling scrapes the ocean floor, destroying ancient deep-sea corals and habitats. This practice turns thriving ecosystems into underwater wastelands.</p>
+                </div>
+            </div>
+            <div class="cta">
+                <h3>Take Action Today</h3>
+                <p>Reduce plastic use • Support sustainable seafood • Reduce carbon footprint • Protect marine habitats • Spread awareness</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Save Our Oceans Initiative | Together We Can Make a Difference</p>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        // Create floating bubbles
+        function createBubble() {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            const size = Math.random() * 60 + 20;
+            bubble.style.width = size + 'px';
+            bubble.style.height = size + 'px';
+            bubble.style.left = Math.random() * 100 + '%';
+            bubble.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            bubble.style.animationDelay = Math.random() * 5 + 's';
+            document.body.appendChild(bubble);
+            
+            setTimeout(() => bubble.remove(), 20000);
+        }
+
+        // Generate bubbles periodically
+        setInterval(createBubble, 2000);
+        for(let i = 0; i < 10; i++) createBubble();
+    </script>
+</body>
+</html>

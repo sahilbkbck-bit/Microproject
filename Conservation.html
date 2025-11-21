@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ocean Conservation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(180deg, #001a33 0%, #003d5c 50%, #005a7f 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Animated wave background */
+        .wave {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="%23ffffff"/><path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" fill="%23ffffff"/><path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="%23ffffff"/></svg>') repeat-x;
+            background-size: 1200px 100px;
+            animation: wave 15s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
+            opacity: 0.3;
+            z-index: 1;
+        }
+
+        .wave:nth-child(2) {
+            bottom: 10px;
+            animation: wave 20s cubic-bezier(0.36, 0.45, 0.63, 0.53) -.125s infinite, swell 7s ease -1.25s infinite;
+            opacity: 0.2;
+        }
+
+        @keyframes wave {
+            0% { background-position-x: 0; }
+            100% { background-position-x: 1200px; }
+        }
+
+        @keyframes swell {
+            0%, 100% { transform: translate3d(0,-25px,0); }
+            50% { transform: translate3d(0,5px,0); }
+        }
+
+        /* Floating bubbles */
+        .bubble {
+            position: fixed;
+            bottom: -100px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: rise 15s infinite ease-in;
+            z-index: 0;
+        }
+
+        @keyframes rise {
+            to { bottom: 110%; transform: translateX(50px); }
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 26, 51, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #8dd5f7;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #8dd5f7;
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            padding: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(141, 213, 247, 0.7);
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(141, 213, 247, 0.5); }
+            to { text-shadow: 0 0 40px rgba(141, 213, 247, 1); }
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            color: #8dd5f7;
+            max-width: 700px;
+            line-height: 1.8;
+        }
+
+        section {
+            min-height: 100vh;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(0, 58, 92, 0.4);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 4rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(141, 213, 247, 0.2);
+        }
+
+        h2 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #8dd5f7;
+            text-shadow: 0 0 20px rgba(141, 213, 247, 0.5);
+        }
+
+        .intro-text {
+            font-size: 1.2rem;
+            line-height: 2;
+            text-align: center;
+            color: #b3e5fc;
+            margin-bottom: 3rem;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .card {
+            background: rgba(0, 90, 127, 0.3);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(141, 213, 247, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(141, 213, 247, 0.3);
+            border-color: #8dd5f7;
+        }
+
+        .card h3 {
+            font-size: 1.8rem;
+            color: #8dd5f7;
+            margin-bottom: 1rem;
+        }
+
+        .card p {
+            line-height: 1.8;
+            color: #b3e5fc;
+            margin-bottom: 1rem;
+        }
+
+        .card ul {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .card li {
+            color: #b3e5fc;
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .card li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #8dd5f7;
+        }
+
+        .action-card {
+            background: linear-gradient(135deg, rgba(0, 90, 127, 0.5) 0%, rgba(0, 58, 92, 0.5) 100%);
+            border: 2px solid rgba(141, 213, 247, 0.4);
+        }
+
+        .action-card:hover {
+            background: linear-gradient(135deg, rgba(0, 90, 127, 0.7) 0%, rgba(0, 58, 92, 0.7) 100%);
+        }
+
+        .group-card {
+            text-align: center;
+        }
+
+        .group-logo {
+            width: 80px;
+            height: 80px;
+            background: rgba(141, 213, 247, 0.2);
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
+        .cta-box {
+            background: linear-gradient(135deg, rgba(141, 213, 247, 0.2) 0%, rgba(0, 90, 127, 0.3) 100%);
+            border: 2px solid #8dd5f7;
+            padding: 3rem;
+            border-radius: 25px;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .cta-box h3 {
+            font-size: 2.5rem;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .cta-box p {
+            font-size: 1.3rem;
+            color: #b3e5fc;
+            line-height: 1.8;
+        }
+
+        .highlight {
+            background: rgba(141, 213, 247, 0.2);
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+            color: #ffffff;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 26, 51, 0.9);
+            position: relative;
+            z-index: 10;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            .container { padding: 2rem; }
+            nav ul { gap: 1rem; }
+            .content { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated waves -->
+    <div class="wave"></div>
+    <div class="wave"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="#projects">Ongoing Projects</a></li>
+            <li><a href="#action">What You Can Do</a></li>
+            <li><a href="#groups">Conservation Groups</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <h1>Ocean Conservation</h1>
+        <p>Together, we can protect and restore our oceans. Discover how conservation efforts worldwide are making a difference and how you can contribute to saving marine ecosystems.</p>
+    </section>
+
+    <!-- Ongoing Projects Section -->
+    <section id="projects">
+        <div class="container">
+            <h2>🌍 Ongoing Conservation Projects</h2>
+            <p class="intro-text">Innovative initiatives around the world are working to restore and protect our oceans for future generations.</p>
+            <div class="content">
+                <div class="card">
+                    <h3>Coral Reef Restoration</h3>
+                    <p>Scientists are growing coral in nurseries and transplanting them to damaged reefs. Coral gardening projects have successfully restored thousands of square meters of reef ecosystems.</p>
+                    <ul>
+                        <li>3D-printed coral structures</li>
+                        <li>Coral breeding programs</li>
+                        <li>Heat-resistant coral development</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Ocean Cleanup Initiative</h3>
+                    <p>Advanced systems are removing plastic from ocean garbage patches and rivers before waste reaches the sea. Cleanup projects have removed millions of pounds of plastic debris.</p>
+                    <ul>
+                        <li>Autonomous collection systems</li>
+                        <li>River barriers to catch plastic</li>
+                        <li>Recycling programs for ocean plastic</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Marine Protected Areas</h3>
+                    <p>Countries are establishing vast protected zones where fishing and development are restricted, allowing ecosystems to recover and thrive naturally.</p>
+                    <ul>
+                        <li>17% of oceans now protected</li>
+                        <li>No-take marine reserves</li>
+                        <li>Wildlife migration corridors</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Sustainable Fishing Programs</h3>
+                    <p>Fisheries are adopting sustainable practices with improved gear, catch limits, and monitoring to protect fish populations and reduce bycatch.</p>
+                    <ul>
+                        <li>Smart fishing technology</li>
+                        <li>Bycatch reduction devices</li>
+                        <li>Community-based management</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Mangrove Restoration</h3>
+                    <p>Coastal communities are replanting mangrove forests that protect shorelines, sequester carbon, and provide vital nursery habitats for marine life.</p>
+                    <ul>
+                        <li>Community planting programs</li>
+                        <li>1 billion mangroves planted</li>
+                        <li>Coastal protection benefits</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Whale & Sea Turtle Conservation</h3>
+                    <p>Tracking programs, rescue networks, and protection zones are helping endangered marine species recover from near-extinction.</p>
+                    <ul>
+                        <li>Satellite tracking systems</li>
+                        <li>Rescue and rehabilitation centers</li>
+                        <li>Anti-poaching patrols</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- What You Can Do Section -->
+    <section id="action">
+        <div class="container">
+            <h2>💙 What You Can Do</h2>
+            <p class="intro-text">Every action counts! Here are practical ways you can make a real difference in ocean conservation.</p>
+            <div class="content">
+                <div class="card action-card">
+                    <h3>Reduce Plastic Use</h3>
+                    <p>Small changes in daily habits can dramatically reduce ocean plastic pollution.</p>
+                    <ul>
+                        <li>Use reusable bags, bottles, and containers</li>
+                        <li>Say no to single-use plastics</li>
+                        <li>Choose products with minimal packaging</li>
+                        <li>Support plastic-free alternatives</li>
+                    </ul>
+                </div>
+                <div class="card action-card">
+                    <h3>Choose Sustainable Seafood</h3>
+                    <p>Make informed choices to support responsible fishing practices.</p>
+                    <ul>
+                        <li>Check seafood guides and apps</li>
+                        <li>Buy certified sustainable fish</li>
+                        <li>Avoid overfished species</li>
+                        <li>Support local, small-scale fisheries</li>
+                    </ul>
+                </div>
+                <div class="card action-card">
+                    <h3>Reduce Carbon Footprint</h3>
+                    <p>Combat ocean acidification and warming by lowering emissions.</p>
+                    <ul>
+                        <li>Use renewable energy sources</li>
+                        <li>Choose public transport or bike</li>
+                        <li>Eat less meat and dairy</li>
+                        <li>Support green energy policies</li>
+                    </ul>
+                </div>
+                <div class="card action-card">
+                    <h3>Participate in Cleanups</h3>
+                    <p>Join beach and coastal cleanup events in your community.</p>
+                    <ul>
+                        <li>Organize local beach cleanups</li>
+                        <li>Join cleanup organizations</li>
+                        <li>Remove trash near waterways</li>
+                        <li>Document and report pollution</li>
+                    </ul>
+                </div>
+                <div class="card action-card">
+                    <h3>Educate & Advocate</h3>
+                    <p>Spread awareness and support ocean-friendly policies.</p>
+                    <ul>
+                        <li>Share conservation information</li>
+                        <li>Support environmental legislation</li>
+                        <li>Contact elected representatives</li>
+                        <li>Teach others about ocean issues</li>
+                    </ul>
+                </div>
+                <div class="card action-card">
+                    <h3>Support Conservation</h3>
+                    <p>Contribute to organizations working to protect our oceans.</p>
+                    <ul>
+                        <li>Donate to marine conservation groups</li>
+                        <li>Volunteer for ocean projects</li>
+                        <li>Adopt marine animals symbolically</li>
+                        <li>Participate in citizen science</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conservation Groups Section -->
+    <section id="groups">
+        <div class="container">
+            <h2>🐋 Leading Conservation Groups</h2>
+            <p class="intro-text">These organizations are at the forefront of ocean protection, leading research, advocacy, and restoration efforts worldwide.</p>
+            <div class="content">
+                <div class="card group-card">
+                    <div class="group-logo">🌊</div>
+                    <h3>Ocean Conservancy</h3>
+                    <p>Leading global efforts to protect ocean health through science-based solutions, policy advocacy, and the International Coastal Cleanup program.</p>
+                </div>
+                <div class="card group-card">
+                    <div class="group-logo">🐠</div>
+                    <h3>Oceana</h3>
+                    <p>The largest international organization focused exclusively on ocean conservation, working to protect and restore ocean biodiversity through policy change.</p>
+                </div>
+                <div class="card group-card">
+                    <div class="group-logo">🌱</div>
+                    <h3>Coral Reef Alliance</h3>
+                    <p>Dedicated to saving coral reefs through community-centered conservation programs and innovative reef restoration techniques.</p>
+                </div>
+                <div class="card group-card">
+                    <div class="group-logo">🐢</div>
+                    <h3>Sea Turtle Conservancy</h3>
+                    <p>The world's oldest sea turtle research and conservation organization, protecting endangered sea turtles through research and education.</p>
+                </div>
+                <div class="card group-card">
+                    <div class="group-logo">🌐</div>
+                    <h3>Surfrider Foundation</h3>
+                    <p>A grassroots organization protecting oceans, waves, and beaches through activism, community programs, and environmental education.</p>
+                </div>
+                <div class="card group-card">
+                    <div class="group-logo">🦈</div>
+                    <h3>Project AWARE</h3>
+                    <p>A global movement of scuba divers protecting ocean environments through underwater cleanups, marine debris surveys, and shark conservation.</p>
+                </div>
+                <div class="card group-card">
+                    <div class="group-logo">🌍</div>
+                    <h3>WWF Oceans</h3>
+                    <p>Working to safeguard marine ecosystems, combat illegal fishing, and create sustainable ocean management practices worldwide.</p>
+                </div>
+                <div class="card group-card">
+                    <div class="group-logo">♻️</div>
+                    <h3>The Ocean Cleanup</h3>
+                    <p>Developing advanced technologies to rid the world's oceans of plastic, tackling the Great Pacific Garbage Patch and river pollution.</p>
+                </div>
+                <div class="card group-card">
+                    <div class="group-logo">🐳</div>
+                    <h3>Sea Shepherd</h3>
+                    <p>Direct-action marine conservation organization defending, conserving, and protecting ocean wildlife through intervention and documentation.</p>
+                </div>
+            </div>
+
+            <div class="cta-box">
+                <h3>Join the Movement</h3>
+                <p>The ocean needs all of us. Whether you <span class="highlight">volunteer your time</span>, <span class="highlight">donate to causes</span>, or simply <span class="highlight">make better choices</span> every day, you have the power to create lasting change. Start today!</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Ocean Conservation Initiative | Every Wave of Change Starts With You</p>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        // Create floating bubbles
+        function createBubble() {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            const size = Math.random() * 60 + 20;
+            bubble.style.width = size + 'px';
+            bubble.style.height = size + 'px';
+            bubble.style.left = Math.random() * 100 + '%';
+            bubble.style.animationDuration = (Math.random() * 10 + 10) + 's';
+            bubble.style.animationDelay = Math.random() * 5 + 's';
+            document.body.appendChild(bubble);
+            
+            setTimeout(() => bubble.remove(), 20000);
+        }
+
+        // Generate bubbles periodically
+        setInterval(createBubble, 2000);
+        for(let i = 0; i < 10; i++) createBubble();
+    </script>
+</body>
+</html>

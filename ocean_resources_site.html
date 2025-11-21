@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ocean Resources Hub</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(180deg, #001a33 0%, #003d5c 50%, #005a7f 100%);
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Animated wave background */
+        .wave {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="%23ffffff"/><path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" fill="%23ffffff"/><path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="%23ffffff"/></svg>') repeat-x;
+            background-size: 1200px 100px;
+            animation: wave 15s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
+            opacity: 0.3;
+            z-index: 1;
+        }
+
+        .wave:nth-child(2) {
+            bottom: 10px;
+            animation: wave 20s cubic-bezier(0.36, 0.45, 0.63, 0.53) -.125s infinite, swell 7s ease -1.25s infinite;
+            opacity: 0.2;
+        }
+
+        @keyframes wave {
+            0% { background-position-x: 0; }
+            100% { background-position-x: 1200px; }
+        }
+
+        @keyframes swell {
+            0%, 100% { transform: translate3d(0,-25px,0); }
+            50% { transform: translate3d(0,5px,0); }
+        }
+
+        /* Floating bubbles */
+        .bubble {
+            position: fixed;
+            bottom: -100px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: rise 15s infinite ease-in;
+            z-index: 0;
+        }
+
+        @keyframes rise {
+            to { bottom: 110%; transform: translateX(50px); }
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 26, 51, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #8dd5f7;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #8dd5f7;
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+            padding: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(141, 213, 247, 0.7);
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 20px rgba(141, 213, 247, 0.5); }
+            to { text-shadow: 0 0 40px rgba(141, 213, 247, 1); }
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            color: #8dd5f7;
+            max-width: 700px;
+            line-height: 1.8;
+        }
+
+        section {
+            min-height: 100vh;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(0, 58, 92, 0.4);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 4rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(141, 213, 247, 0.2);
+        }
+
+        h2 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #8dd5f7;
+            text-shadow: 0 0 20px rgba(141, 213, 247, 0.5);
+        }
+
+        .intro-text {
+            font-size: 1.2rem;
+            line-height: 2;
+            text-align: center;
+            color: #b3e5fc;
+            margin-bottom: 3rem;
+        }
+
+        /* Fun Facts Styles */
+        .facts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .fact-card {
+            background: rgba(0, 90, 127, 0.3);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(141, 213, 247, 0.3);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .fact-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(141, 213, 247, 0.3);
+            border-color: #8dd5f7;
+        }
+
+        .fact-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .fact-card h3 {
+            font-size: 1.5rem;
+            color: #8dd5f7;
+            margin-bottom: 1rem;
+        }
+
+        .fact-card p {
+            line-height: 1.8;
+            color: #b3e5fc;
+        }
+
+        /* Research Styles */
+        .research-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .research-item {
+            background: rgba(0, 90, 127, 0.3);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(141, 213, 247, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .research-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 30px rgba(141, 213, 247, 0.3);
+            border-color: #8dd5f7;
+        }
+
+        .research-date {
+            color: #8dd5f7;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .research-item h3 {
+            font-size: 1.8rem;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .research-item p {
+            line-height: 1.8;
+            color: #b3e5fc;
+            margin-bottom: 1rem;
+        }
+
+        .research-link {
+            color: #8dd5f7;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .research-link:hover {
+            color: #ffffff;
+        }
+
+        /* Gallery Styles */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .gallery-item {
+            background: rgba(0, 90, 127, 0.3);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(141, 213, 247, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(141, 213, 247, 0.4);
+            border-color: #8dd5f7;
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #005a7f 0%, #003d5c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .gallery-caption {
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .gallery-caption h3 {
+            color: #8dd5f7;
+            margin-bottom: 0.5rem;
+        }
+
+        .gallery-caption p {
+            color: #b3e5fc;
+            font-size: 0.9rem;
+        }
+
+        /* Videos Styles */
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .video-card {
+            background: rgba(0, 90, 127, 0.3);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(141, 213, 247, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .video-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(141, 213, 247, 0.3);
+            border-color: #8dd5f7;
+        }
+
+        .video-thumbnail {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(135deg, #005a7f 0%, #003d5c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .play-button {
+            font-size: 5rem;
+            color: rgba(255, 255, 255, 0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .video-thumbnail:hover .play-button {
+            transform: scale(1.2);
+        }
+
+        .video-info {
+            padding: 1.5rem;
+        }
+
+        .video-info h3 {
+            color: #8dd5f7;
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .video-info p {
+            color: #b3e5fc;
+            line-height: 1.6;
+        }
+
+        /* Contact Form Styles */
+        .contact-form {
+            max-width: 700px;
+            margin: 3rem auto;
+            background: rgba(0, 90, 127, 0.3);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid rgba(141, 213, 247, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        label {
+            display: block;
+            color: #8dd5f7;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(0, 26, 51, 0.5);
+            border: 1px solid rgba(141, 213, 247, 0.3);
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #8dd5f7;
+            box-shadow: 0 0 20px rgba(141, 213, 247, 0.3);
+        }
+
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        button {
+            background: linear-gradient(135deg, #8dd5f7 0%, #005a7f 100%);
+            color: #001a33;
+            padding: 1rem 3rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(141, 213, 247, 0.5);
+        }
+
+        .success-message {
+            display: none;
+            background: rgba(141, 213, 247, 0.2);
+            border: 2px solid #8dd5f7;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            color: #8dd5f7;
+            margin-top: 2rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0, 26, 51, 0.9);
+            position: relative;
+            z-index: 10;
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            .container { padding: 2rem; }
+            nav ul { gap: 1rem; }
+            .gallery-grid, .videos-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated waves -->
+    <div class="wave"></div>
+    <div class="wave"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#facts">Fun Facts</a></li>
+            <li><a href="#research">Latest Research</a></li>
+            <li><a href="#gallery">Photo Gallery</a></li>
+            <li><a href="#videos">Educational Videos</a></li>
+            <li><a href="#contact">Contact & Feedback</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <h1>Ocean Resources Hub</h1>
+        <p>Explore fascinating ocean facts, cutting-edge research, stunning imagery, and educational content all in one place.</p>
+    </section>
+
+    <!-- Fun Facts Section -->
+    <section id="facts">
+        <div class="container">
+            <h2>🐠 Amazing Ocean Fun Facts</h2>
+            <p class="intro-text">Discover incredible facts about our oceans that will blow your mind!</p>
+            <div class="facts-grid">
+                <div class="fact-card">
+                    <div class="fact-icon">🌊</div>
+                    <h3>71% Water Planet</h3>
+                    <p>Oceans cover over 71% of Earth's surface and contain 97% of all water on our planet!</p>
+                </div>
+                <div class="fact-card">
+                    <div class="fact-icon">🫁</div>
+                    <h3>Ocean Lungs</h3>
+                    <p>Marine plants produce over 50% of the world's oxygen. Every second breath you take comes from the ocean!</p>
+                </div>
+                <div class="fact-card">
+                    <div class="fact-icon">🐋</div>
+                    <h3>Blue Whale Heart</h3>
+                    <p>A blue whale's heart weighs about 400 pounds and is so large that a human could swim through its arteries!</p>
+                </div>
+                <div class="fact-card">
+                    <div class="fact-icon">🏔️</div>
+                    <h3>Deepest Point</h3>
+                    <p>The Mariana Trench is 36,000 feet deep - deeper than Mount Everest is tall!</p>
+                </div>
+                <div class="fact-card">
+                    <div class="fact-icon">⚡</div>
+                    <h3>Electric Eels</h3>
+                    <p>Electric eels can generate shocks of up to 860 volts - enough to stun a horse!</p>
+                </div>
+                <div class="fact-card">
+                    <div class="fact-icon">🧠</div>
+                    <h3>Dolphin Intelligence</h3>
+                    <p>Dolphins can recognize themselves in mirrors and have unique names (signature whistles) for each other!</p>
+                </div>
+                <div class="fact-card">
+                    <div class="fact-icon">🦑</div>
+                    <h3>Giant Squid Eyes</h3>
+                    <p>Giant squid have the largest eyes in the animal kingdom - as big as dinner plates at 10 inches wide!</p>
+                </div>
+                <div class="fact-card">
+                    <div class="fact-icon">🪸</div>
+                    <h3>Coral Reefs</h3>
+                    <p>Coral reefs support 25% of all marine life despite covering less than 1% of the ocean floor!</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Latest Research Section -->
+    <section id="research">
+        <div class="container">
+            <h2>🔬 Latest Ocean Research</h2>
+            <p class="intro-text">Stay updated with groundbreaking discoveries and research in marine science.</p>
+            <div class="research-list">
+                <div class="research-item">
+                    <div class="research-date">November 2024</div>
+                    <h3>New Deep-Sea Species Discovery</h3>
+                    <p>Scientists have discovered over 5,000 new species in the Clarion-Clipperton Zone, including bizarre jellyfish and crustaceans that challenge our understanding of deep-sea ecosystems.</p>
+                    <a href="#" class="research-link">Read Full Study →</a>
+                </div>
+                <div class="research-item">
+                    <div class="research-date">October 2024</div>
+                    <h3>Breakthrough in Coral Heat Resistance</h3>
+                    <p>Researchers have successfully bred coral that can withstand higher temperatures, offering hope for reef restoration in warming oceans. This could revolutionize conservation efforts.</p>
+                    <a href="#" class="research-link">Read Full Study →</a>
+                </div>
+                <div class="research-item">
+                    <div class="research-date">September 2024</div>
+                    <h3>Whale Songs Decoded Using AI</h3>
+                    <p>Artificial intelligence has helped scientists decode complex patterns in humpback whale songs, revealing sophisticated communication previously unknown to science.</p>
+                    <a href="#" class="research-link">Read Full Study →</a>
+                </div>
+                <div class="research-item">
+                    <div class="research-date">August 2024</div>
+                    <h3>Microplastic Impact on Marine Life</h3>
+                    <p>New research reveals microplastics are affecting fish behavior and reproduction at alarming rates, with particles found in over 90% of tested species.</p>
+                    <a href="#" class="research-link">Read Full Study →</a>
+                </div>
+                <div class="research-item">
+                    <div class="research-date">July 2024</div>
+                    <h3>Ancient Ocean Currents Shifting</h3>
+                    <p>Climate scientists report unprecedented changes in Atlantic Ocean currents that have remained stable for thousands of years, with potential global climate implications.</p>
+                    <a href="#" class="research-link">Read Full Study →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Photo Gallery Section -->
+    <section id="gallery">
+        <div class="container">
+            <h2>📸 Ocean Photo Gallery</h2>
+            <p class="intro-text">Explore stunning imagery of marine life and ocean landscapes.</p>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <div class="gallery-image">🐢</div>
+                    <div class="gallery-caption">
+                        <h3>Sea Turtle Migration</h3>
+                        <p>Green sea turtle swimming in crystal clear waters</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-image">🪸</div>
+                    <div class="gallery-caption">
+                        <h3>Vibrant Coral Reef</h3>
+                        <p>Colorful coral ecosystem teeming with life</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-image">🐙</div>
+                    <div class="gallery-caption">
+                        <h3>Giant Pacific Octopus</h3>
+                        <p>Intelligent cephalopod displaying color change</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-image">🦈</div>
+                    <div class="gallery-caption">
+                        <h3>Whale Shark Encounter</h3>
+                        <p>The world's largest fish gliding gracefully</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-image">🐋</div>
+                    <div class="gallery-caption">
+                        <h3>Humpback Whale Breach</h3>
+                        <p>Magnificent whale launching from the ocean</p>
+                    </div>
+                </div>
+                <div class="gallery-item">
+                    <div class="gallery-image">🐠</div>
+                    <div class="gallery-caption">
+                        <h3>Tropical Fish School</h3>
+                        <p>Thousands of fish moving in synchronized patterns</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Educational Videos Section -->
+    <section id="videos">
+        <div class="container">
+            <h2>🎥 Educational Videos</h2>
+            <p class="intro-text">Learn about ocean conservation, marine biology, and ocean science through engaging video content.</p>
+            <div class="videos-grid">
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <div class="play-button">▶</div>
+                    </div>
+                    <div class="video-info">
+                        <h3>How Ocean Currents Work</h3>
+                        <p>Understanding the global conveyor belt and its impact on climate and marine ecosystems.</p>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <div class="play-button">▶</div>
+                    </div>
+                    <div class="video-info">
+                        <h3>Life in the Deep Sea</h3>
+                        <p>Explore the mysterious creatures that thrive in the ocean's darkest depths.</p>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <div class="play-button">▶</div>
+                    </div>
+                    <div class="video-info">
+                        <h3>Coral Reef Ecosystems</h3>
+                        <p>Discover the intricate relationships in the rainforests of the sea.</p>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <div class="play-button">▶</div>
+                    </div>
+                    <div class="video-info">
+                        <h3>Ocean Acidification Explained</h3>
+                        <p>Learn how CO2 is changing ocean chemistry and affecting marine life.</p>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <div class="play-button">▶</div>
+                    </div>
+                    <div class="video-info">
+                        <h3>Whale Migration Patterns</h3>
+                        <p>Follow the incredible journeys of whales across vast ocean distances.</p>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-thumbnail">
+                        <div class="play-button">▶</div>
+                    </div>
+                    <div class="video-info">
+                        <h3>Sustainable Fishing Practices</h3>
+                        <p>How we can harvest seafood without depleting ocean resources.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Feedback Section -->
+    <section id="contact">
+        <div class="container">
+            <h2>📬 Contact & Feedback</h2>
+            <p class="intro-text">We'd love to hear from you! Share your thoughts, questions, or suggestions.</p>
+            <form class="contact-form" id="contactForm">
+                <div class="form-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" name="name" required placeholder="Enter your name">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="your.email@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <select id="subject" name="subject" required>
+                        <option value="">Select a topic</option>
+                        <option value="general">General Inquiry</option>
+                        <option value="research">Research Question</option>
+                        <option value="feedback">Website Feedback</option>
+                        <option value="collaboration">Collaboration Opportunity</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="message">Your Message</label>
+                    <textarea id="message" name="message" required placeholder="Tell us what's on your mind..."></textarea>
+                </div>
+                <button type="submit">Send Message</button>
+                <div class="success-message" id="successMessage">
+                    ✓ Thank you! Your message has been sent successfully. We'll get back to you soon!
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Ocean Resources Hub | Exploring, Learning, Protecting Our Oceans</p>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Create floating bubbles
+        function createBubble() {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            const size = Math.random() * 
